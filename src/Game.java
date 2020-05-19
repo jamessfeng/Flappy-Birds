@@ -50,7 +50,7 @@ public class Game implements ActionListener, KeyListener {
 
             if (bird.collided()){
                 running = false;
-                System.out.println("u ded");
+                System.out.println("u deded");
             }
             if (pipeList.get(0).point1.x < 0){
                 pipeList.remove(0);
