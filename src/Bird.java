@@ -11,8 +11,9 @@ public class Bird {
         if (point.y < 0){
             point = new Point(point.x, 0);
         }
-        else if (point.y > 300){
-            point = new Point(point.x, 300);
+        else if (point.y > Game.height -50){
+            point = new Point(point.x, Game.height - 50);
+//            System.out.println(point.y);
         }
         else{
             falling();
@@ -20,7 +21,7 @@ public class Bird {
         }
     }
     public void jump(){
-        velocity = 10;
+        velocity = 8;
     }
     public void falling(){
         if (velocity > -10){
@@ -30,8 +31,15 @@ public class Bird {
     public boolean collided(){
 //        for ()
         Game game = Game.game;
-        Point pipePoint = game.pipe.point1;
-        if (point.x + Game.xScale == pipePoint.x && point.y >= pipePoint.y){
+        if (game.pipeList.isEmpty()){
+            return false;
+        }
+        Point pipePoint1 = game.pipeList.get(0).point1;
+        if (point.x + Game.xScale == pipePoint1.x && point.y >= pipePoint1.y){
+            return true;
+        }
+        Point pipePoint2 = game.pipeList.get(0).point2;
+        if (point.x + Game.xScale == pipePoint2.x && point.y < pipePoint2.y){
             return true;
         }
         return false;

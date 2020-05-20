@@ -5,18 +5,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Game implements ActionListener, KeyListener {
     public static Game game;
 
     public JFrame frame;
     public RenderPanel renderPanel;
-    public boolean running;
-    public Timer timer = new Timer(100, this);
-    public static int xScale = 15, yScale = 10, width = 260, height = 400;
+    public boolean running = true;
+    public Timer timer = new Timer(0, this);
+    public static int xScale = 15, yScale = 10, width = 260, height = 400, ticks = 0;
     public Bird bird;
     public List <Pipe> pipeList = new ArrayList<>();
-    public Pipe pipe;
+    public Random rand = new Random();
+    public int score;
 
     public Game(){
         JFrame frame = new JFrame("Flappy Bird");
@@ -26,7 +28,6 @@ public class Game implements ActionListener, KeyListener {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.addKeyListener(this);
-        running = true;
         timer.setDelay(20);
         timer.start();
 
@@ -34,7 +35,9 @@ public class Game implements ActionListener, KeyListener {
     }
     public void startGame(){
         bird = new Bird(20,50);
-        pipe = new Pipe(width, 200);
+        pipeList.add(new Pipe(width, 200, 100));
+        running = true;
+        score = 0;
     }
 
     public static void main(String[] args){
@@ -45,15 +48,25 @@ public class Game implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent actionEvent) {
         if (running){
             renderPanel.repaint();
+            ticks++;
             bird.movement();
-            pipe.movement();
+            for (Pipe curPipe: pipeList){
+                curPipe.movement();
+            }
 
             if (bird.collided()){
                 running = false;
                 System.out.println("u deded");
             }
-            if (pipeList.get(0).point1.x < 0){
+            if (!pipeList.isEmpty() && pipeList.get(0).point1.x + xScale < 0){
                 pipeList.remove(0);
+                score++;
+            }
+            if (ticks > 100){
+                int num = rand.nextInt(250);
+                pipeList.add(new Pipe(width, num + 100, num));
+                ticks = 0;
+
             }
         }
     }
